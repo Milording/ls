@@ -102,17 +102,5 @@ namespace ABBYY_LS.Tests
 
         #endregion
         
-        #region Finilizer
-
-        /// <summary>
-        /// Clean up browser driver.
-        /// </summary>
-        ~TestTranslatorSetup()
-        {
-            driver.Close();
-        }
-
-        #endregion
-        
     }
 }
