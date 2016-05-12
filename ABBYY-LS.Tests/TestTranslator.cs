@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ABBYY_LS.Tests.Page_objects;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
@@ -21,6 +23,25 @@ namespace ABBYY_LS.Tests
     [TestFixture]
     public class TestTranslator:TestTranslatorSetup
     {
+
+        #region Finilizer
+
+        /// <summary>
+        /// Clean up browser driver.
+        /// </summary>
+        [TearDown]
+        public void TearDown()
+        {
+            if (TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Failed)
+                driver.GetScreenshot()
+                    .SaveAsFile(
+                        String.Format("{0}-{1:yyyy-MM-dd_HHmmss}", TestContext.CurrentContext.Test.MethodName,
+                            DateTime.Now), ImageFormat.Jpeg);
+            LogFile.LogMessage(TestContext.CurrentContext);
+            this.driver.Close();
+        }
+
+        #endregion
 
         #region Tests
 
@@ -59,7 +80,7 @@ namespace ABBYY_LS.Tests
 
         #region Fields
 
-        public static RemoteWebDriver Driver;
+        public RemoteWebDriver driver;
 
         internal TranslatorPage translatorPage;
 
@@ -72,11 +93,11 @@ namespace ABBYY_LS.Tests
         /// </summary>
         public TestTranslatorSetup()
         {
-            Driver = new FirefoxDriver();
-            Driver.Navigate().GoToUrl("http://abbyy-ls.ru/calculator");
+            driver = new FirefoxDriver();
+            driver.Navigate().GoToUrl("http://abbyy-ls.ru/calculator");
             Thread.Sleep(1000);
 
-            this.translatorPage = new TranslatorPage(Driver);
+            this.translatorPage = new TranslatorPage(driver);
         }
 
         #endregion
@@ -88,7 +109,7 @@ namespace ABBYY_LS.Tests
         /// </summary>
         ~TestTranslatorSetup()
         {
-            Driver.Close();
+            driver.Close();
         }
 
         #endregion

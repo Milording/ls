@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ABBYY_LS.Tests.Page_objects;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Remote;
@@ -19,9 +20,52 @@ namespace ABBYY_LS.Tests
     /// Test for <see cref="MainPage"/>.
     /// </summary>
     [TestFixture]
-    public class TestMainPage : TestMainSetup
+    public class TestMainPage
     {
-        //this.driver.GetScreenshot().SaveAsFile(DateTime.Now + index + "_TestMainPage.jpg", ImageFormat.Jpeg);
+        #region Fields
+
+        public RemoteWebDriver driver;
+
+        internal MainPage mainPage;
+
+        #endregion
+
+        #region Setup test
+
+        /// <summary>
+        /// Invokes before every test.
+        /// </summary>
+        [SetUp]
+        public void SetUp()
+        {
+            this.driver = new FirefoxDriver();
+            this.driver.Navigate().GoToUrl("http://abbyy-ls.ru/");
+            Thread.Sleep(1000);
+
+            this.mainPage = new MainPage(this.driver);
+        }
+
+        #endregion
+
+        #region Finilizer
+
+        /// <summary>
+        /// Clean up browser driver.
+        /// </summary>
+        [TearDown]
+        public void TearDown()
+        {
+            if (TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Failed)
+                driver.GetScreenshot()
+                    .SaveAsFile(
+                        String.Format("{0}-{1:yyyy-MM-dd_HHmmss}", TestContext.CurrentContext.Test.MethodName,
+                            DateTime.Now), ImageFormat.Jpeg);
+            LogFile.LogMessage(TestContext.CurrentContext);
+            this.driver.Close();
+        }
+
+        #endregion
+
         #region Tests
 
         [Test]
@@ -69,47 +113,5 @@ namespace ABBYY_LS.Tests
         
         #endregion
 
-    }
-
-    /// <summary>
-    /// Setup for test of <see cref="TestMainPage"/>.
-    /// </summary>
-    public class TestMainSetup
-    {
-        #region Fields
-
-        public RemoteWebDriver driver;
-
-        internal MainPage mainPage;
-
-        #endregion
-
-        #region Constructors
-
-        /// <summary>
-        /// Create a new instance of <see cref="TestMainSetup"/>.
-        /// </summary>
-        public TestMainSetup()
-        {
-            this.driver = new FirefoxDriver();
-            this.driver.Navigate().GoToUrl("http://abbyy-ls.ru/");
-            Thread.Sleep(1000);
-
-            this.mainPage = new MainPage(this.driver);
-        }
-
-        #endregion
-
-        #region Finilizer
-
-        /// <summary>
-        /// Clean up browser driver.
-        /// </summary>
-        ~TestMainSetup()
-        {
-            this.driver.Close();
-        }
-
-        #endregion
     }
 }

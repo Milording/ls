@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Security.Policy;
 using System.Text;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 using ABBYY_LS.Tests.Page_objects;
 using NUnit.Framework.Internal;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Remote;
@@ -19,8 +21,54 @@ namespace ABBYY_LS.Tests
     /// Tests a <see cref="InterpretationPage"/>
     /// </summary>
     [TestFixture]
-    public class TestInterpretation : TestInterpretationSetup
+    public class TestInterpretation
     {
+        #region Fields
+
+        private RemoteWebDriver driver;
+
+        private InterpretationPage interpretationPage;
+
+        #endregion
+
+        #region Setup tests
+
+        /// <summary>
+        /// Invokes before every test.
+        /// </summary>
+        [SetUp]
+        public void SetUp()
+        {
+            driver = new FirefoxDriver();
+
+            string url = "http://abbyy-ls.ru/interpreting_offer";
+
+            driver.Navigate().GoToUrl(url);
+
+            Thread.Sleep(3000);
+
+            this.interpretationPage = new InterpretationPage(this.driver);
+        }
+
+        #endregion
+
+        #region Finilizer
+
+        /// <summary>
+        /// Invokes after every test.
+        /// </summary>
+        [TearDown]
+        public void TearDown()
+        {
+            if (TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Failed)
+                driver.GetScreenshot().SaveAsFile(
+                    String.Format("{0}-{1:yyyy-MM-dd_HHmmss}", TestContext.CurrentContext.Test.MethodName,
+                        DateTime.Now), ImageFormat.Jpeg);
+            LogFile.LogMessage(TestContext.CurrentContext);
+            this.driver.Close();
+        }
+
+        #endregion
 
         #region Tests
 
@@ -33,51 +81,5 @@ namespace ABBYY_LS.Tests
         }
 
         #endregion
-
-    }
-
-    /// <summary>
-    /// Setup of <see cref="TestInterpretation"/>.
-    /// </summary>
-    public class TestInterpretationSetup
-    {
-
-        #region Local fields
-
-        internal RemoteWebDriver driver;
-
-        internal InterpretationPage interpretationPage;
-
-        #endregion
-
-        #region Constructor
-
-        /// <summary>
-        /// Creates a new instance of <see cref="TestInterpretationSetup"/>.
-        /// </summary>
-        public TestInterpretationSetup()
-        {
-            driver = new FirefoxDriver();
-            driver.Navigate().GoToUrl("http://abbyy-ls.ru/interpreting_offer");
-
-            Thread.Sleep(3000);
-
-            this.interpretationPage = new InterpretationPage(this.driver);
-        }
-
-        #endregion
-
-        #region Finilizer
-
-        /// <summary>
-        /// Clean up browser data.
-        /// </summary>
-        ~TestInterpretationSetup()
-        {
-            this.driver.Close();
-        }
-
-        #endregion
-
     }
 }
