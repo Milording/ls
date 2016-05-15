@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
@@ -14,6 +15,13 @@ namespace ABBYY_LS.Tests.Page_objects
     /// </summary>
     public class InterpretationPage
     {
+
+        #region Singletone
+
+        private static InterpretationPage instance = null;
+        private static readonly object padlock = new object();
+
+        #endregion
 
         #region Drivers
 
@@ -37,6 +45,8 @@ namespace ABBYY_LS.Tests.Page_objects
 
         public string TrainingEvent => "тренинг";
 
+        public string PageUrl => "http://abbyy-ls.ru/interpreting_offer";
+
         #endregion
 
         #region Constructors
@@ -45,14 +55,32 @@ namespace ABBYY_LS.Tests.Page_objects
         /// Initialize a new instance of <see cref="InterpretationPage"/>.
         /// </summary>
         /// <param name="driver"></param>
-        public InterpretationPage(RemoteWebDriver driver)
+        InterpretationPage(RemoteWebDriver driver)
         {
             this.driver = driver;
+            this.driver.Navigate().GoToUrl(this.PageUrl);
+
+            Thread.Sleep(3000);
         }
 
         #endregion
 
         #region Public methods
+        
+        /// <summary>
+        /// Returns a singltone of <see cref="InterpretationPage"/>
+        /// </summary>
+        public static InterpretationPage GetPage(RemoteWebDriver driver)
+        {
+            lock (padlock)
+            {
+                if (instance == null)
+                {
+                    instance = new InterpretationPage(driver);
+                }
+                return instance;
+            }
+        }
 
         /// <summary>
         /// Set event of page.

@@ -38,11 +38,8 @@ namespace ABBYY_LS.Tests
         [SetUp]
         public void SetUp()
         {
-            this.driver = new FirefoxDriver();
-            this.driver.Navigate().GoToUrl("http://abbyy-ls.ru/");
-            Thread.Sleep(1000);
-
-            this.mainPage = new MainPage(this.driver);
+            this.mainPage = MainPage.GetPage(new FirefoxDriver());
+            this.driver = this.mainPage.driver;
         }
 
         #endregion
@@ -61,7 +58,7 @@ namespace ABBYY_LS.Tests
                         String.Format("{0}-{1:yyyy-MM-dd_HHmmss}", TestContext.CurrentContext.Test.MethodName,
                             DateTime.Now), ImageFormat.Jpeg);
             LogFile.LogMessage(TestContext.CurrentContext);
-            this.driver.Close();
+            //this.driver.Close();
         }
 
         #endregion

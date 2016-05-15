@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
@@ -22,11 +23,19 @@ namespace ABBYY_LS.Tests.Page_objects
         readonly By secondSelectorLocator = By.XPath("//*[@id='main']/form/div[2]/select[2]");
 
         #endregion
+        
+        #region Singletone
+
+        private static TranslatorPage instance = null;
+        private static readonly object padlock = new object();
+
+        #endregion
 
         #region Page values
 
         public string EnglishValue => "en";
         public string RussianValue => "ru";
+        public string PageUrl => "http://abbyy-ls.ru/calculator";
 
         #endregion
 
@@ -35,7 +44,7 @@ namespace ABBYY_LS.Tests.Page_objects
         /// <summary>
         /// Browser driver for page manipuluting.
         /// </summary>
-        private RemoteWebDriver driver;
+        public RemoteWebDriver driver;
 
         #endregion
 
@@ -45,14 +54,31 @@ namespace ABBYY_LS.Tests.Page_objects
         /// Create a new instance of <see cref="TranslatorPage"/>.
         /// </summary>
         /// <param name="driver">Using web driver</param>
-        public TranslatorPage(RemoteWebDriver driver)
+        TranslatorPage(RemoteWebDriver driver)
         {
             this.driver = driver;
+            this.driver.Navigate().GoToUrl(this.PageUrl);
+            Thread.Sleep(3000);
         }
 
         #endregion
 
         #region Public methods
+        
+        /// <summary>
+        /// Returns a singltone of <see cref="TranslatorPage"/>
+        /// </summary>
+        public static TranslatorPage GetPage(RemoteWebDriver driver)
+        {
+            lock (padlock)
+            {
+                if (instance == null)
+                {
+                    instance = new TranslatorPage(driver);
+                }
+                return instance;
+            }
+        }
 
         /// <summary>
         /// Selects a first language.

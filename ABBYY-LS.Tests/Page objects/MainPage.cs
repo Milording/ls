@@ -15,9 +15,14 @@ namespace ABBYY_LS.Tests.Page_objects
     public class MainPage
     {
 
+        #region Singletone
+
+        private static MainPage instance = null;
+        private static readonly object padlock = new object();
+
+        #endregion
+
         #region Locators
-
-
 
         public IWebElement SmartImage => driver.FindElementByXPath("//*[@id='slider']/div[2]/div/div[1]");
         public IWebElement CostImage => driver.FindElementByXPath("//*[@id='slider']/div[2]/div/div[2]");
@@ -33,12 +38,18 @@ namespace ABBYY_LS.Tests.Page_objects
 
         #endregion
 
+        #region Page values
+        
+        public string PageUrl => "http://abbyy-ls.ru/";
+
+        #endregion
+
         #region Drivers
 
         /// <summary>
         /// Browser driver for page manipuluting.
         /// </summary>
-        private RemoteWebDriver driver;
+        public RemoteWebDriver driver;
 
         #endregion
 
@@ -47,14 +58,33 @@ namespace ABBYY_LS.Tests.Page_objects
         /// <summary>
         /// Initialize a new instance of <see cref="MainPage"/>.
         /// </summary>
-        public MainPage(RemoteWebDriver driver)
+        MainPage(RemoteWebDriver driver)
         {
             this.driver = driver;
+            this.driver.Navigate().GoToUrl(this.PageUrl);
+
+            Thread.Sleep(3000);
         }
 
         #endregion
 
         #region Public methods
+
+
+        /// <summary>
+        /// Returns a singltone of <see cref="MainPage"/>
+        /// </summary>
+        public static MainPage GetPage(RemoteWebDriver driver)
+        {
+            lock (padlock)
+            {
+                if (instance == null)
+                {
+                    instance = new MainPage(driver);
+                }
+                return instance;
+            }
+        }
 
         /// <summary>
         /// Set menu.
@@ -69,6 +99,5 @@ namespace ABBYY_LS.Tests.Page_objects
         #endregion
 
     }
-
-
+    
 }

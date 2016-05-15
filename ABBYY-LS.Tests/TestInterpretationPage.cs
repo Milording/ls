@@ -21,7 +21,7 @@ namespace ABBYY_LS.Tests
     /// Tests a <see cref="InterpretationPage"/>
     /// </summary>
     [TestFixture]
-    public class TestInterpretation
+    public class TestInterpretationPage
     {
         #region Fields
 
@@ -41,13 +41,7 @@ namespace ABBYY_LS.Tests
         {
             driver = new FirefoxDriver();
 
-            string url = "http://abbyy-ls.ru/interpreting_offer";
-
-            driver.Navigate().GoToUrl(url);
-
-            Thread.Sleep(3000);
-
-            this.interpretationPage = new InterpretationPage(this.driver);
+            this.interpretationPage = InterpretationPage.GetPage(this.driver);
         }
 
         #endregion

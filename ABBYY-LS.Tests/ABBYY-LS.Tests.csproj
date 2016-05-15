@@ -57,10 +57,10 @@
     <Compile Include="Page objects\InterpretationPage.cs" />
     <Compile Include="Page objects\MainPage.cs" />
     <Compile Include="Page objects\TranslatorPage.cs" />
-    <Compile Include="TestInterpretation.cs" />
+    <Compile Include="TestInterpretationPage.cs" />
     <Compile Include="TestMainPage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestTranslator.cs" />
+    <Compile Include="TestTranslatorPage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

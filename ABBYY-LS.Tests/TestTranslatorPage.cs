@@ -21,7 +21,7 @@ namespace ABBYY_LS.Tests
     /// Tests a <see cref="TranslatorPage"/>.
     /// </summary>
     [TestFixture]
-    public class TestTranslator:TestTranslatorSetup
+    public class TestTranslatorPage:TestTranslatorSetup
     {
 
         #region Finilizer
@@ -38,7 +38,7 @@ namespace ABBYY_LS.Tests
                         String.Format("{0}-{1:yyyy-MM-dd_HHmmss}", TestContext.CurrentContext.Test.MethodName,
                             DateTime.Now), ImageFormat.Jpeg);
             LogFile.LogMessage(TestContext.CurrentContext);
-            this.driver.Close();
+            //this.driver.Close();
         }
 
         #endregion
@@ -73,7 +73,7 @@ namespace ABBYY_LS.Tests
 
 
     /// <summary>
-    /// Setup class for <see cref="TestTranslator"/>
+    /// Setup class for <see cref="TestTranslatorPage"/>
     /// </summary>
     public class TestTranslatorSetup
     {
@@ -93,11 +93,8 @@ namespace ABBYY_LS.Tests
         /// </summary>
         public TestTranslatorSetup()
         {
-            driver = new FirefoxDriver();
-            driver.Navigate().GoToUrl("http://abbyy-ls.ru/calculator");
-            Thread.Sleep(1000);
-
-            this.translatorPage = new TranslatorPage(driver);
+            this.translatorPage = TranslatorPage.GetPage(new FirefoxDriver());
+            this.driver= this.translatorPage.driver;
         }
 
         #endregion
