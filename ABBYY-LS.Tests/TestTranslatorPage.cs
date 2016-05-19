@@ -70,8 +70,7 @@ namespace ABBYY_LS.Tests
         #endregion
         
     }
-
-
+    
     /// <summary>
     /// Setup class for <see cref="TestTranslatorPage"/>
     /// </summary>
@@ -93,7 +92,7 @@ namespace ABBYY_LS.Tests
         /// </summary>
         public TestTranslatorSetup()
         {
-            this.translatorPage = TranslatorPage.GetPage(new FirefoxDriver());
+            this.translatorPage = TranslatorPage.GetPage(Settings.WebDriver);
             this.driver= this.translatorPage.driver;
         }
 

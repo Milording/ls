@@ -57,6 +57,7 @@
     <Compile Include="Page objects\InterpretationPage.cs" />
     <Compile Include="Page objects\MainPage.cs" />
     <Compile Include="Page objects\TranslatorPage.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="TestInterpretationPage.cs" />
     <Compile Include="TestMainPage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

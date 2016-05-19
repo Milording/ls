@@ -39,8 +39,7 @@ namespace ABBYY_LS.Tests
         [SetUp]
         public void SetUp()
         {
-            driver = new FirefoxDriver();
-
+            this.driver = Settings.WebDriver;
             this.interpretationPage = InterpretationPage.GetPage(this.driver);
         }
 

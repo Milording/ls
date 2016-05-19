@@ -38,7 +38,7 @@ namespace ABBYY_LS.Tests
         [SetUp]
         public void SetUp()
         {
-            this.mainPage = MainPage.GetPage(new FirefoxDriver());
+            this.mainPage = MainPage.GetPage(Settings.WebDriver);
             this.driver = this.mainPage.driver;
         }
 
